@@ -1,32 +1,29 @@
-import { useState } from "react";
-import { useTasksDispatch } from "../../core/hooks/useTaskDispatch";
+import React, { useRef } from 'react'
 
-export default function TaskForm() {
-  const [text, setText] = useState("");
-
-  const dispatch = useTasksDispatch();
-
-  return (
-    <>
-      <input
-        placeholder="Add task"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <button
-        onClick={() => {
-          setText("");
-          dispatch({
-            type: "added",
-            id: nextId++,
-            text: text,
-          });
-        }}
-      >
-        Add
-      </button>
-    </>
-  );
+interface TaskFormProps {
+  onAdd: (text: string) => void
 }
 
-let nextId = 3;
+export function TaskForm({ onAdd }: TaskFormProps) {
+
+  const descriptionInputRef = useRef<HTMLInputElement>(null)
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const text = descriptionInputRef.current!.value
+
+    const form = (event.target as HTMLFormElement)
+    form.reset()
+    descriptionInputRef.current!.focus()
+
+    onAdd(text)
+  }
+
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" ref={descriptionInputRef} placeholder="Descrição da Task" />
+      <input type="submit" value="Adicionar Tarefa" />
+    </form>
+  )
+}

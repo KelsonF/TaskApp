@@ -1,69 +1,68 @@
-import { useState } from "react";
-import { Task } from "../../core/interfaces/Task";
+import { useEffect, useMemo, useRef, useState } from "react"
+import { Link } from "react-router-dom"
+import { Task } from "../../core/interfaces/Task"
 
-interface TaskProps {
-  task: Task;
+interface TaskListItemProps {
+  task: Task
+  onRemove: (task: Task) => void
+  onSave: (task: Task) => void
 }
 
-export function Task({ task }: TaskProps) {
-  const [isEditing, setIsEditing] = useState(false);
+export function TaskListItem({ task, onRemove, onSave }: TaskListItemProps) {
 
-  const dispatch = useTasksDispatch();
+  const [isEditing, setIsEditing] = useState(false)
+  const refInput = useRef<HTMLInputElement>(null)
+  const refDone = useRef<HTMLInputElement>(null)
 
-  let taskContent;
+  const handleRemove = () => { onRemove(task) }
 
-  if (isEditing) {
-    taskContent = (
-      <>
-        <input
-          value={task.description}
-          onChange={(e) => {
-            dispatch({
-              type: "changed",
-              task: {
-                ...task,
-                text: e.target.value,
-              },
-            });
-          }}
-        />
-        <button onClick={() => setIsEditing(false)}>Save</button>
-      </>
-    );
-  } else {
-    taskContent = (
-      <>
-        {task.description}
-        <button onClick={() => setIsEditing(true)}>Edit</button>
-      </>
-    );
+  const handleSaveOrEdit = () => {
+
+    if (isEditing) {
+      setIsEditing(false)
+      task.name = refInput.current!.value;
+      onSave(task)
+    } else {
+      setIsEditing(true)
+    }
+
   }
+
+  const handleChangeDone = () => {
+    task.done = refDone.current!.checked;
+    onSave(task);
+  }
+
+  useEffect(() => {
+    refDone.current!.checked = task.done;
+  }, [])
+
+  useEffect(() => {
+    if (isEditing) {
+      refInput.current!.value = task.name
+      refInput.current!.focus()
+    }
+  }, [isEditing])
+
+  const labelBtnEditar = useMemo(() => {
+    return isEditing ? 'Salvar' : 'Editar'
+  }, [isEditing])
+
+  console.log('Item renderizado!')
+
   return (
-    <label>
-      <input
-        type="checkbox"
-        checked={task.done}
-        onChange={(e) => {
-          dispatch({
-            type: "changed",
-            task: {
-              ...task,
-              done: e.target.checked,
-            },
-          });
-        }}
-      />
-      {taskContent}
-      <button
-        onClick={() => {
-          dispatch({
-            type: "deleted",
-            id: task.id,
-          });
-        }}
-      >
-        Delete
-      </button>
-    </label>
-  );
+    <li style={{ listStyle: "none" }}>
+      <div style={{ display: "flex", gap: 10 }}>
+        <input type="checkbox" ref={refDone} onChange={handleChangeDone} />
+
+        {isEditing ? <input ref={refInput} /> :
+          <p>
+            <Link to={`/tasks/${task.id}`}>{task.name}</Link>
+          </p>
+        }
+
+        <button onClick={handleSaveOrEdit}>{labelBtnEditar}</button>
+        <button onClick={handleRemove}>Lixeira</button>
+      </div>
+    </li >)
 }
