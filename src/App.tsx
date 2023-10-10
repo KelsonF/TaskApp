@@ -1,5 +1,5 @@
 import { Link, Routes } from "react-router-dom";
-import { Route } from "./routes/routes.js";
+import { RouteProvider } from "./routes/routes.js";
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
         <Link to="/tasks">Tasks</Link>
         <Link to="/about">About</Link>
       </nav>
-      <Route />
+      <RouteProvider />
     </Routes>
   );
 }
