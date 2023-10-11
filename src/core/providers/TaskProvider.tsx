@@ -1,12 +1,12 @@
 import { PropsWithChildren, useReducer } from "react";
 import { TasksDispatchContext, TasksContext } from "../context/task_context";
-import { taskStateReducer } from "../reducers/task_reducer";
+import { TaskReducer } from "../reducers/task_reducer";
 
 export function TasksProvider({ children }: PropsWithChildren) {
-  const [tasks, dispatch] = useReducer(taskStateReducer, { tasks: [] });
+  const [state, dispatch] = useReducer(TaskReducer, { tasks: [] });
 
   return (
-    <TasksContext.Provider value={tasks}>
+    <TasksContext.Provider value={state.tasks}>
       <TasksDispatchContext.Provider value={dispatch}>
         {children}
       </TasksDispatchContext.Provider>

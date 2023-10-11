@@ -6,7 +6,7 @@ function TaskPage() {
 
   return (
     <TasksProvider>
-      <h1>Day off in Kyoto</h1>
+      <h1>Bem vindo ao nosso gerenciador de Tasks</h1>
       <TaskForm />
       <TaskList />
     </TasksProvider>

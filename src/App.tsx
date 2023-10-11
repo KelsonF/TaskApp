@@ -1,16 +1,29 @@
-import { Link, Routes } from "react-router-dom";
-import { RouteProvider } from "./routes/routes.js";
+import { Link, Outlet } from "react-router-dom";
+import "./App.css";
 
 function App() {
   return (
-    <Routes>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/tasks">Tasks</Link>
-        <Link to="/about">About</Link>
-      </nav>
-      <RouteProvider />
-    </Routes>
+    <>
+      <header>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/home">Home</Link>
+            </li>
+            <li>
+              <Link to="/tasks">Tasks</Link>
+            </li>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <Outlet />
+      <footer>
+        <h5>Feito por Kelson Eduardo</h5>
+      </footer>
+    </>
   );
 }
 

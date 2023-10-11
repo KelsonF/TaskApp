@@ -3,10 +3,11 @@ import { Task } from "../../core/interfaces/Task";
 import { ActionType } from "../../core/reducers/task_reducer";
 import { useTasksDispatch } from "../../core/hooks/useTaskDispatch";
 import { ulid } from "ulidx";
+import "./style.css";
 
 export function TaskForm() {
   const descriptionInputRef = useRef<HTMLInputElement>(null);
-  const dispatch = useTasksDispatch()
+  const dispatch = useTasksDispatch();
 
   const handleAddTask = (text: string) => {
     const task: Task = {
@@ -43,13 +44,20 @@ export function TaskForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        ref={descriptionInputRef}
-        placeholder="Descrição da Task"
-      />
-      <input type="submit" value="Adicionar Tarefa" />
-    </form>
+    <main>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          ref={descriptionInputRef}
+          placeholder="Descrição da Task"
+          className="input-text"
+        />
+        <input
+          type="submit"
+          value="Adicionar Tarefa"
+          className="submit-button"
+        />
+      </form>
+    </main>
   );
 }
