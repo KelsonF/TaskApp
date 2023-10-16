@@ -4,17 +4,18 @@ import { useTasksDispatch } from "../../core/hooks/useTaskDispatch";
 import { Task } from "../../core/interfaces/Task";
 import { ActionType } from "../../core/reducers/task_reducer";
 import { TaskListItem } from "../Task";
+import { useLoaderData } from "react-router-dom";
 
 const TaskList = () => {
+  const data = useLoaderData();
   const tasks = useTasks();
   const dispatch = useTasksDispatch();
 
   useEffect(() => {
-    fetch("http://localhost:3000/tasks")
-      .then((response) => response.json())
-      .then((data) => {
-        dispatch({ type: ActionType.LOADED, payload: { tasks: data } });
-      });
+    (async () => {
+      const tasks = data as Task[];
+      dispatch({ type: ActionType.LOADED, payload: { tasks } });
+    })();
   }, []);
 
   const handleRemoveTask = (task: Task) => {

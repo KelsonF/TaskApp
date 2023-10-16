@@ -1,20 +1,44 @@
-import { Routes, Route } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { TaskPage } from "../pages/TaskPage";
-import { HomePage } from "../pages/HomePage";
 import { AboutPage } from "../pages/AboutPage";
 import { LoginPage } from "../pages/LoginPage";
 import { ErrorPage } from "../pages/ErrorPage";
+import { ProtectedRoutes } from "./ProtectedRoutes";
+import { App } from "../App";
 
-export function RouteProvider() {
-  return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="tasks">
-        <Route index element={<TaskPage />} />
-        <Route path=":id" element={<AboutPage />} />
-      </Route>
-      <Route path="login" element={<LoginPage />} />
-      <Route path="*" element={<ErrorPage />} />
-    </Routes>
-  );
-}
+const base_url = "http://localhost:3000/topics";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "tasks",
+        element: (
+          <ProtectedRoutes>
+            <TaskPage />
+          </ProtectedRoutes>
+        ),
+        loader: async () => {
+          return fetch(`${base_url}`);
+        },
+      },
+      {
+        path: "about",
+        element: (
+          <ProtectedRoutes>
+            <AboutPage />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
+    ],
+  },
+]);
+
+export { router };

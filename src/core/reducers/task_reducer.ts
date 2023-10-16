@@ -45,4 +45,4 @@ function reducer(state: TaskState, action: Action): TaskState {
 
 }
 
-export { reducer as TaskReducer };
+export { reducer as TaskReducer, type Action };
